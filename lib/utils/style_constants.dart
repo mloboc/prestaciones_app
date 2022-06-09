@@ -17,6 +17,13 @@ TextStyle headingStyle2 = TextStyle(
   height: 1.5,
 );
 
+TextStyle centerChartTextStyle = TextStyle(
+  fontSize: 35,
+  fontWeight: FontWeight.bold,
+  color: kPrimaryLightColor,
+  height: 1.5,
+);
+
 TextStyle headingStyle3 = TextStyle(
   fontSize: 35,
   fontWeight: FontWeight.w300,

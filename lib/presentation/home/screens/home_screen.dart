@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:prestaciones_app/presentation/home/widgets/dropdown_menu.dart';
+import 'package:prestaciones_app/presentation/home/widgets/final_calculation_resignation.dart';
+import 'package:prestaciones_app/presentation/home/widgets/final_calculation_dismissal.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
+List<DropdownMenuItem<String>> get dropdownItems {
+  List<DropdownMenuItem<String>> menuItems = [
+    const DropdownMenuItem(value: "Despido", child: Text("Despido")),
+    const DropdownMenuItem(value: "Renuncia", child: Text("Renuncia")),
+  ];
+  return menuItems;
+}
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen(List<DropdownMenuItem<String>> dropdownItems, {Key? key})
+      : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _nombre = TextEditingController();
+  final TextEditingController _monto = TextEditingController();
+  final TextEditingController _empresa = TextEditingController();
+
+  String? selectedValue = null;
+  final _dropdownFormKey = GlobalKey<FormState>();
+
+  String _date1 = "Fecha Ingreso";
+  String _date2 = 'Fecha Despido';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 30),
-              DropdownMenu(dropdownItems),
+              _buildDropdown(),
               const SizedBox(height: 30),
               _buildNameFormField(),
               const SizedBox(height: 30),
@@ -70,6 +90,39 @@ class _HomeScreenState extends State<HomeScreen> {
         ]);
   }
 
+  Widget _buildDropdown() {
+    return Form(
+        key: _dropdownFormKey,
+        child: Column(children: [
+          DropdownButtonFormField(
+              decoration: InputDecoration(
+                labelText: 'Tipo',
+                floatingLabelAlignment: FloatingLabelAlignment.start,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: Colors.grey.shade500)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              validator: (value) => value == null ? "Selecciona un tipo" : null,
+              dropdownColor: Colors.white,
+              value: selectedValue,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedValue = newValue!;
+                });
+              },
+              items: dropdownItems),
+
+          // if (_dropdownFormKey.currentState!.validate()) {
+          //valid flow
+        ]));
+  }
+
   Widget _buildNameFormField() {
     return Container(
       decoration: BoxDecoration(
@@ -77,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: TextField(
+        controller: _nombre,
         decoration: InputDecoration(
           labelText: 'Nombre',
           hintStyle: hintTextStyle,
@@ -99,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: TextField(
+        controller: _monto,
         decoration: InputDecoration(
           labelText: 'Salario',
           hintStyle: hintTextStyle,
@@ -121,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: TextField(
+        controller: _empresa,
         decoration: InputDecoration(
           labelText: 'Empresa',
           hintStyle: hintTextStyle,
@@ -137,7 +193,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDateTimePicker1() {
-    String _date = "Fecha Ingreso";
     return Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -161,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
                     maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date = '${date.year} - ${date.month} - ${date.day}';
+                  _date1 = '${date.year} - ${date.month} - ${date.day}';
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
@@ -176,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  " $_date",
+                                  " $_date1",
                                   style: hintTextStyle,
                                 ),
                               ],
@@ -193,7 +248,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDateTimePicker2() {
-    String _date = "Fecha Despido";
     return Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -217,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
                     maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date = '${date.year} - ${date.month} - ${date.day}';
+                  _date2 = '${date.year} - ${date.month} - ${date.day}';
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
@@ -232,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  " $_date",
+                                  " $_date2",
                                   style: hintTextStyle,
                                 ),
                               ],
@@ -261,7 +315,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )),
           onPressed: () {
-            Navigator.pushNamed(context, 'final_calculation_dismissal');
+            if (selectedValue == 'Despido') {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => FinalCalculationDismissal(
+                        tipo: selectedValue.toString(),
+                        nombre: _nombre.text,
+                        monto: _monto.text,
+                        empresa: _empresa.text,
+                      )));
+            } else if (selectedValue == 'Renuncia') {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => FinalCalculationResignation(
+                      tipo: selectedValue.toString(),
+                      nombre: _nombre.text,
+                      monto: _monto.text,
+                      empresa: _empresa.text)));
+            } else {}
           },
           child: Text(
             'Calcular',
