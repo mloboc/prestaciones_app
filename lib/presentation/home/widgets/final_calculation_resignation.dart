@@ -3,16 +3,29 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:prestaciones_app/utils/label_text.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
 
-class FinalCalculationResignation extends StatefulWidget {
-  String nombre, monto, empresa, tipo;
+String tiempoTrabajado(String inicio, String fin) {
+  DateTime fechaInicio = DateTime.parse(inicio);
+  DateTime fechaFin = DateTime.parse(fin);
+  int diferencia = fechaFin.difference(fechaInicio).inDays;
+  var _years = (diferencia ~/ 360).toInt();
+  var residuoMeses = diferencia % 360;
+  var _months = (residuoMeses ~/ 30).toInt();
+  var _days = (residuoMeses - (_years * 5)) % 30;
+  return ' ${_years <= 0 ? '' : _years == 1 ? '$_years Año, ' : '$_years Años,'} ${_months <= 0 ? '' : _months == 1 ? '$_months Mes, ' : '$_months Meses,'} ${_days <= 0 ? '' : _days == 1 ? '$_days Día.' : '$_days Días.'}';
+}
 
-  FinalCalculationResignation(
-      {Key? key,
-      required this.nombre,
-      required this.monto,
-      required this.empresa,
-      required this.tipo})
-      : super(key: key);
+class FinalCalculationResignation extends StatefulWidget {
+  String nombre, monto, empresa, tipo, fechaInicio, fechaFin;
+
+  FinalCalculationResignation({
+    Key? key,
+    required this.nombre,
+    required this.monto,
+    required this.empresa,
+    required this.tipo,
+    required this.fechaInicio,
+    required this.fechaFin,
+  }) : super(key: key);
 
   @override
   State<FinalCalculationResignation> createState() =>
@@ -111,7 +124,8 @@ class _FinalCalculationResignationState
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
-                          text: ' \r10 Dias, 0 Meses, 3 Años',
+                          text:
+                              ' \r ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)}',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -128,9 +142,8 @@ class _FinalCalculationResignationState
                         )
                       ])),
               const SizedBox(height: 20),
-              LabelTextAmount(
-                  label: 'Salario Diario', amount: calcSalarioDiario()),
-              const SizedBox(height: 30),
+              LabelTextAmount(label: 'Salario Diario', amount: ''),
+              const SizedBox(height: 20),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
@@ -292,12 +305,5 @@ class _FinalCalculationResignationState
             style: buttonTextStyle,
           )),
     );
-  }
-
-  double calcSalarioDiario() {
-    double r = 30;
-    double p = double.parse(widget.monto);
-    double value = (p / r);
-    return value;
   }
 }

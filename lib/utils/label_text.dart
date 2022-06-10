@@ -9,7 +9,7 @@ class LabelTextAmount extends StatelessWidget {
   }) : super(key: key);
 
   final String label;
-  final double amount;
+  final String amount;
   @override
   Widget build(BuildContext context) {
     return Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:prestaciones_app/presentation/home/widgets/final_calculation_resignation.dart';
 import 'package:prestaciones_app/presentation/home/widgets/final_calculation_dismissal.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
@@ -28,8 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedValue = null;
   final _dropdownFormKey = GlobalKey<FormState>();
 
-  String _date1 = "Fecha Ingreso";
-  String _date2 = 'Fecha Despido';
+  String _date1 = "2020-08-16";
+  String _date2 = '2022-06-10';
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
                     maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date1 = '${date.year} - ${date.month} - ${date.day}';
+                  _date1 = DateFormat('yyyy-MM-dd').format(date);
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
@@ -271,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
                     maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date2 = '${date.year} - ${date.month} - ${date.day}';
+                  _date2 = DateFormat('yyyy-MM-dd').format(date);
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
@@ -322,14 +323,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         nombre: _nombre.text,
                         monto: _monto.text,
                         empresa: _empresa.text,
+                        fechaInicio: _date1,
+                        fechaFin: _date2,
                       )));
             } else if (selectedValue == 'Renuncia') {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => FinalCalculationResignation(
-                      tipo: selectedValue.toString(),
-                      nombre: _nombre.text,
-                      monto: _monto.text,
-                      empresa: _empresa.text)));
+                        tipo: selectedValue.toString(),
+                        nombre: _nombre.text,
+                        monto: _monto.text,
+                        empresa: _empresa.text,
+                        fechaInicio: _date1,
+                        fechaFin: _date2,
+                      )));
             } else {}
           },
           child: Text(

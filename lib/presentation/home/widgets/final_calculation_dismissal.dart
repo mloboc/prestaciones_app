@@ -3,15 +3,31 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:prestaciones_app/utils/label_text%20table.dart';
 import 'package:prestaciones_app/utils/label_text.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
+import 'package:prestaciones_app/utils/compesation.dart';
+
+String tiempoTrabajado(String inicio, String fin) {
+  DateTime fechaInicio = DateTime.parse(inicio);
+  DateTime fechaFin = DateTime.parse(fin);
+
+  int diferencia =
+      (fechaFin.difference(fechaInicio).inDays / 365 * 360).toInt() + 1;
+  int years = (diferencia ~/ 360).toInt();
+  int residuoMeses = diferencia % 360;
+  int months = (residuoMeses ~/ 30).toInt();
+  int days = (residuoMeses) % 30;
+  return '${years <= 0 ? '' : years == 1 ? '$years Año, ' : '$years Años,'} ${months <= 0 ? '' : months == 1 ? '$months Mes, ' : '$months Meses,'} ${days <= 0 ? '' : days == 1 ? '$days Día.' : '$days Días.'}';
+}
 
 class FinalCalculationDismissal extends StatefulWidget {
-  String nombre, monto, empresa, tipo;
+  String nombre, monto, empresa, tipo, fechaInicio, fechaFin;
   FinalCalculationDismissal({
     Key? key,
     required this.nombre,
     required this.monto,
     required this.empresa,
     required this.tipo,
+    required this.fechaInicio,
+    required this.fechaFin,
   }) : super(key: key);
 
   @override
@@ -20,6 +36,25 @@ class FinalCalculationDismissal extends StatefulWidget {
 }
 
 class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
+  double _diasTrabajados = 0;
+  double _Salary = 0;
+  double _SalaryByDay = 0;
+  double _OrdinarySalary = 0;
+  double _OrdinarySalaryByDay = 0;
+  double _treceavoDias = 0;
+  double _treceavo = 0;
+  double _catorceavoDias = 0;
+  double _catorceavo = 0;
+  double _vacacionesDias = 0;
+  double _vacaciones = 0;
+  double _preaviso = 0;
+  double _preavisoDias = 0;
+  double _cesantia = 0;
+  double _cesantiaDias = 0;
+  double _cesantiaProporcional = 0;
+  double _cesantiaProporcionalDias = 0;
+  double _totalDerechos = 0;
+  double _totalObligaciones = 0;
   final dataMap = <String, double>{
     "XIII": 916.67,
     "XIV": 9166.67,
@@ -28,6 +63,15 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
     "Cesantia": 16500,
     "CesantiaPRO": 8066
   };
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setWages();
+    calculateCompesation();
+    calculateObligation();
+  }
 
   final colorList = <Color>[
     Colors.yellow.shade200,
@@ -116,7 +160,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
-                          text: ' \r10 Dias, 0 Meses, 3 Años',
+                          text:
+                              ' \r ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)}',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -128,13 +173,22 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
-                          text: ' \r${widget.monto}',
+                          text: CurrencyFormat.format(_Salary),
                           style: subtitleStyle2,
                         )
                       ])),
               const SizedBox(height: 20),
               LabelTextAmount(
-                  label: 'Salario Diario:', amount: calcSalarioDiario()),
+                  label: 'Salario Diario:',
+                  amount: CurrencyFormat.format(_SalaryByDay)),
+              const SizedBox(height: 20),
+              LabelTextAmount(
+                  label: 'Salario Ordinario:',
+                  amount: CurrencyFormat.format(_OrdinarySalary)),
+              const SizedBox(height: 20),
+              LabelTextAmount(
+                  label: 'Salario Ordinario Diario:',
+                  amount: CurrencyFormat.format(_OrdinarySalaryByDay)),
               const SizedBox(height: 30),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -172,9 +226,9 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               const Text('\r\rXIII'),
                             ],
                           )),
-                          const DataCell(Text('1,67')),
-                          const DataCell(Text('550,00')),
-                          const DataCell(Text('916,67')),
+                          DataCell(Text(CurrencyFormat.format(_treceavoDias))),
+                          DataCell(Text(CurrencyFormat.format(_SalaryByDay))),
+                          DataCell(Text(CurrencyFormat.format(_treceavo))),
                         ],
                       ),
                       DataRow(
@@ -195,9 +249,10 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          const DataCell(Text('16,67')),
-                          const DataCell(Text('550,00')),
-                          const DataCell(Text('9.166,67')),
+                          DataCell(
+                              Text(CurrencyFormat.format(_catorceavoDias))),
+                          DataCell(Text(CurrencyFormat.format(_SalaryByDay))),
+                          DataCell(Text(CurrencyFormat.format(_catorceavo))),
                         ],
                       ),
                       DataRow(
@@ -218,21 +273,21 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          const DataCell(Text('5,87')),
-                          const DataCell(Text('550,00')),
-                          const DataCell(Text('3.226,67')),
+                          DataCell(
+                              Text(CurrencyFormat.format(_vacacionesDias))),
+                          DataCell(Text(
+                              CurrencyFormat.format(_OrdinarySalaryByDay))),
+                          DataCell(Text(CurrencyFormat.format(_vacaciones))),
                         ],
                       ),
-                      const DataRow(
+                      DataRow(
                         cells: <DataCell>[
-                          DataCell(Text('')),
-                          DataCell(Text('')),
-                          DataCell(Text('Total',
+                          const DataCell(Text('')),
+                          const DataCell(Text('')),
+                          const DataCell(Text('Total',
                               style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataCell(
-                            Text('13.310,00',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          )
+                          DataCell(Text(CurrencyFormat.format(_totalDerechos),
+                              style: TextStyle(fontWeight: FontWeight.bold))),
                         ],
                       ),
                       DataRow(
@@ -253,9 +308,10 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          const DataCell(Text('30,00')),
-                          const DataCell(Text('550,00')),
-                          const DataCell(Text('16.500,00')),
+                          DataCell(Text(CurrencyFormat.format(_preavisoDias))),
+                          DataCell(Text(
+                              CurrencyFormat.format(_OrdinarySalaryByDay))),
+                          DataCell(Text(CurrencyFormat.format(_preaviso))),
                         ],
                       ),
                       DataRow(
@@ -276,9 +332,10 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          const DataCell(Text('30,00')),
-                          const DataCell(Text('550,00')),
-                          const DataCell(Text('16.500,00')),
+                          DataCell(Text(CurrencyFormat.format(_cesantiaDias))),
+                          DataCell(Text(
+                              CurrencyFormat.format(_OrdinarySalaryByDay))),
+                          DataCell(Text(CurrencyFormat.format(_cesantia))),
                         ],
                       ),
                       DataRow(
@@ -299,21 +356,24 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          const DataCell(Text('14,67')),
-                          DataCell(LabelTextAmountTable(
-                              amount: calcSalarioDiario())),
-                          const DataCell(Text('8.066,00')),
+                          DataCell(Text(CurrencyFormat.format(
+                              _cesantiaProporcionalDias))),
+                          DataCell(Text(
+                              CurrencyFormat.format(_OrdinarySalaryByDay))),
+                          DataCell(Text(
+                              CurrencyFormat.format(_cesantiaProporcional))),
                         ],
                       ),
-                      const DataRow(
+                      DataRow(
                         cells: <DataCell>[
                           DataCell(Text('')),
                           DataCell(Text('')),
                           DataCell(Text('')),
-                          DataCell(Text('41.066,67')),
+                          DataCell(
+                              Text(CurrencyFormat.format(_totalObligaciones))),
                         ],
                       ),
-                      const DataRow(
+                      DataRow(
                         cells: <DataCell>[
                           DataCell(Text('')),
                           DataCell(Text('')),
@@ -322,7 +382,9 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           )),
                           DataCell(
-                            Text('54.376,67',
+                            Text(
+                                CurrencyFormat.format(
+                                    _totalObligaciones + 100000),
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           )
                         ],
@@ -348,7 +410,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
       initialAngleInDegree: 0,
       chartType: ChartType.ring,
       ringStrokeWidth: 6,
-      centerText: 'L.54.376,67',
+      centerText:
+          'Lps. ${CurrencyFormat.format(_totalDerechos + _totalObligaciones)}',
       centerTextStyle: centerChartTextStyle,
       legendOptions: const LegendOptions(
         showLegendsInRow: false,
@@ -391,10 +454,90 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
     );
   }
 
-  double calcSalarioDiario() {
-    double r = 30;
-    double p = double.parse(widget.monto);
-    double value = (p / r);
-    return value;
+  void setWages() {
+    double salary = double.parse(widget.monto);
+
+    _Salary = salary;
+    _SalaryByDay = salary / 30;
+
+    _OrdinarySalary = (salary * 14) / 12;
+    _OrdinarySalaryByDay = ((salary * 14) / 12) / 30;
+    setState(() {});
+  }
+
+  void calculateCompesation() {
+    DateTime fechaInicio = DateTime.parse(widget.fechaInicio);
+    DateTime fechaFin = DateTime.parse(widget.fechaFin);
+    int diasTrabajados = fechaFin.difference(fechaInicio).inDays;
+    //si ha trabajado más de un año, se calcula desde el 01/01/ del año en curso
+    //caso contrario, se toma desde que comenzó a trabajar.
+    DateTime fechaInicioTreceavo =
+        diasTrabajados >= 360 ? DateTime(fechaFin.year) : fechaInicio;
+    // la diferencia en dias de la fecha fin a la fecha del inicio del treceavo
+    int diferenciaTreceavoDias =
+        fechaFin.difference(fechaInicioTreceavo).inDays;
+    _treceavoDias = (diferenciaTreceavoDias / 360) * 30;
+    _treceavo = _treceavoDias * _SalaryByDay;
+    //si ha trabajado más de un año, se calcula desde el 01/07 del año pasado
+    //caso contrario, se toma desde que comenzó a trabajar.
+    DateTime fechaInicioCatorceavo =
+        diasTrabajados >= 360 ? DateTime(fechaFin.year - 1, 7, 1) : fechaInicio;
+    // la diferencia en dias de la fecha fin a la fecha del inicio del catorceavo
+    int diferenciaCatorceavoDias =
+        fechaFin.difference(fechaInicioCatorceavo).inDays;
+    _catorceavoDias = (diferenciaCatorceavoDias / 360) * 30;
+    _catorceavo = _catorceavoDias * _SalaryByDay;
+    //si ha trabajado más de un año, se calcula un la fecha del último periodo de vacaciones
+    //caso contrario, se toma desde que comenzó a trabajar.
+
+    int aniosTrabajados = (diasTrabajados ~/ 360).toInt();
+    int diasOtorgadosVacaciones = 20;
+    //si no encuentra el parametro del rango, poner el dia maximo
+    Parametros.vacaciones.map((element) => {
+          if (aniosTrabajados == element.anioTrabajado)
+            {diasOtorgadosVacaciones = element.dias}
+        });
+
+    _vacacionesDias = ((diasTrabajados % 360) / diasOtorgadosVacaciones);
+    _vacaciones = _vacacionesDias * _OrdinarySalaryByDay;
+    _totalDerechos = _catorceavo + _treceavo + _vacaciones;
+    setState(() {});
+  }
+
+  void calculateObligation() {
+    DateTime fechaInicio = DateTime.parse(widget.fechaInicio);
+    DateTime fechaFin = DateTime.parse(widget.fechaFin);
+    int diasTrabajados = fechaFin.difference(fechaInicio).inDays;
+    int aniosTrabajados = (diasTrabajados ~/ 360).toInt();
+
+    _preavisoDias = (aniosTrabajados >= 2) ? 60.0 : 99.0;
+
+    Parametros.preaviso.map((e) => {
+          if (!e.mustContinue)
+            {
+              if (_preavisoDias >= e.desde && _preavisoDias <= e.hasta)
+                {_preavisoDias = e.dias.toDouble()}
+            }
+        });
+    _preaviso = _preavisoDias * _OrdinarySalaryByDay;
+
+    _cesantiaDias = (aniosTrabajados < 25) ? aniosTrabajados.toDouble() : 25.00;
+
+    Parametros.cesantia.map((e) => {
+          if (!e.mustContinue)
+            {
+              if (_cesantiaDias >= e.desde && _cesantiaDias <= e.hasta)
+                if (_cesantiaDias > 30)
+                  {
+                    {_cesantiaDias = e.dias.toDouble()}
+                  }
+            }
+        });
+    _cesantia = _OrdinarySalaryByDay * 30 * _cesantiaDias;
+
+    _cesantiaProporcionalDias = ((diasTrabajados % 360) / 30);
+    _cesantiaProporcional = _cesantiaProporcionalDias * _OrdinarySalaryByDay;
+    _totalObligaciones = _cesantia + _cesantiaProporcional + _preaviso;
+    setState(() {});
   }
 }
