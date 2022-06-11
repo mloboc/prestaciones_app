@@ -51,16 +51,21 @@ class _FinalCalculationResignationState
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: Padding(
-        padding: const EdgeInsets.only(top: 50),
-        child: Column(children: [
-          Text(
-            'Total a pagar',
-            style: headingStyle2,
-          ),
-          const SizedBox(height: 40),
-          _buildPendingPaymentChart(),
-          const SizedBox(height: 50),
-          Expanded(child: _buildDataTable())
+        padding: const EdgeInsets.only(top: 30),
+        child: ListView(children: [
+          Column(children: [
+            Center(
+              child: Text(
+                'Total a pagar',
+                style: headingStyle2,
+              ),
+            ),
+            const SizedBox(height: 30),
+            _buildPendingPaymentChart(),
+            const SizedBox(height: 30),
+            _buildDataTable(),
+            const SizedBox(height: 80),
+          ]),
         ]),
       ),
     );
@@ -68,23 +73,26 @@ class _FinalCalculationResignationState
 
   Widget _buildDataTable() {
     double value;
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.6,
-        decoration: BoxDecoration(
-            color: kPrimaryLightColor,
-            borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(40), topLeft: Radius.circular(40))),
-        child: ListView(
-            scrollDirection: Axis.vertical,
-            padding:
-                const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 30),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.72,
+      decoration: BoxDecoration(
+          color: kPrimaryLightColor,
+          borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+              bottomLeft: Radius.circular(40),
+              bottomRight: Radius.circular(40))),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 30),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Tipo:',
+                      text: 'Motivo de Salida:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -96,7 +104,7 @@ class _FinalCalculationResignationState
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Nombre:',
+                      text: 'Nombre Completo:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -108,7 +116,7 @@ class _FinalCalculationResignationState
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Empresa:',
+                      text: 'Nombre de la Empresa:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -133,7 +141,7 @@ class _FinalCalculationResignationState
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Salario:',
+                      text: 'Salario Promedio Mensual:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -259,7 +267,7 @@ class _FinalCalculationResignationState
       dataMap: dataMap,
       animationDuration: const Duration(milliseconds: 800),
       chartLegendSpacing: 32,
-      chartRadius: MediaQuery.of(context).size.width * 0.65,
+      chartRadius: MediaQuery.of(context).size.width * 0.45,
       colorList: colorList,
       initialAngleInDegree: 0,
       chartType: ChartType.ring,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:prestaciones_app/utils/label_text%20table.dart';
 import 'package:prestaciones_app/utils/label_text.dart';
@@ -87,16 +88,19 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: Padding(
-        padding: const EdgeInsets.only(top: 50),
-        child: Column(children: [
-          Text(
-            'Total a pagar',
-            style: headingStyle2,
+        padding: const EdgeInsets.only(top: 30),
+        child: ListView(children: [
+          Center(
+            child: Text(
+              'Total a pagar',
+              style: headingStyle2,
+            ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 30),
           _buildPendingPaymentChart(),
-          const SizedBox(height: 50),
-          Expanded(child: _buildDataTable())
+          const SizedBox(height: 30),
+          _buildDataTable(),
+          const SizedBox(height: 80),
         ]),
       ),
     );
@@ -104,23 +108,25 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
 
   Widget _buildDataTable() {
     double value;
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        decoration: BoxDecoration(
-            color: kPrimaryLightColor,
-            borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(40), topLeft: Radius.circular(40))),
-        child: ListView(
-            scrollDirection: Axis.vertical,
-            padding:
-                const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 30),
+    return Container(
+      height: MediaQuery.of(context).size.height * 1.08,
+      decoration: BoxDecoration(
+          color: kPrimaryLightColor,
+          borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+              bottomLeft: Radius.circular(40),
+              bottomRight: Radius.circular(40))),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 30, right: 30, top: 40),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Tipo:',
+                      text: 'Motivo de Salida:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -132,7 +138,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Nombre:',
+                      text: 'Nombre Completo:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -144,7 +150,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Empresa:',
+                      text: 'Nombre de la Empresa:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -169,7 +175,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Salario:',
+                      text: 'Salario Promedio Mensual:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -405,13 +411,13 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
       dataMap: dataMap,
       animationDuration: const Duration(milliseconds: 800),
       chartLegendSpacing: 32,
-      chartRadius: MediaQuery.of(context).size.width * 0.65,
+      chartRadius: MediaQuery.of(context).size.width * 0.45,
       colorList: colorList,
       initialAngleInDegree: 0,
       chartType: ChartType.ring,
       ringStrokeWidth: 6,
       centerText:
-          'Lps. ${CurrencyFormat.format(_totalDerechos + _totalObligaciones)}',
+          'L. ${CurrencyFormat.format(_totalDerechos + _totalObligaciones)}',
       centerTextStyle: centerChartTextStyle,
       legendOptions: const LegendOptions(
         showLegendsInRow: false,

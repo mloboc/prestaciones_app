@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(children: [
           DropdownButtonFormField(
               decoration: InputDecoration(
-                labelText: 'Tipo',
+                labelText: 'Motivo de Salida',
                 floatingLabelAlignment: FloatingLabelAlignment.start,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 enabledBorder: OutlineInputBorder(
@@ -133,11 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         controller: _nombre,
         decoration: InputDecoration(
-          labelText: 'Nombre',
+          labelText: 'Nombre Completo',
           hintStyle: hintTextStyle,
           floatingLabelAlignment: FloatingLabelAlignment.start,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: 'Nombre',
+          hintText: 'Nombre Completo',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
@@ -156,11 +156,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         controller: _monto,
         decoration: InputDecoration(
-          labelText: 'Salario',
+          labelText: 'Salario Promedio Mensual',
           hintStyle: hintTextStyle,
           floatingLabelAlignment: FloatingLabelAlignment.start,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: 'Monto',
+          hintText: 'L.',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
@@ -179,11 +179,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         controller: _empresa,
         decoration: InputDecoration(
-          labelText: 'Empresa',
+          labelText: 'Nombre de la Empresa',
           hintStyle: hintTextStyle,
           floatingLabelAlignment: FloatingLabelAlignment.start,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: 'Empresa',
+          hintText: 'Nombre de la Empresa',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
@@ -215,11 +215,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       containerHeight: 210.0,
                     ),
                     showTitleActions: true,
-                    minTime: DateTime(2000, 1, 1),
-                    maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date1 = DateFormat('yyyy-MM-dd').format(date);
+                    minTime: DateTime(1, 1, 1950),
+                    maxTime: DateTime.now(), onConfirm: (date) {
+                  _date1 = DateFormat('EEEE, d/MMMM/y', 'es_ES').format(date);
                   setState(() {});
-                }, currentTime: DateTime.now(), locale: LocaleType.en);
+                }, currentTime: DateTime.now(), locale: LocaleType.es);
               },
               child: Container(
                   alignment: Alignment.center,
@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: <Widget>[
                                 Text(
                                   " $_date1",
-                                  style: hintTextStyle,
+                                  style: subtitleStyle,
                                 ),
                               ],
                             )
@@ -271,8 +271,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
-                    maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date2 = DateFormat('yyyy-MM-dd').format(date);
+                    maxTime: DateTime.now(), onConfirm: (date) {
+                  _date2 = DateFormat('EEEE, d/MMMM/y', 'es_ES').format(date);
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
@@ -288,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: <Widget>[
                                 Text(
                                   " $_date2",
-                                  style: hintTextStyle,
+                                  style: subtitleStyle,
                                 ),
                               ],
                             )
