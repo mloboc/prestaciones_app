@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/number_symbols_data.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:prestaciones_app/utils/label_text%20table.dart';
 import 'package:prestaciones_app/utils/label_text.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
 import 'package:prestaciones_app/utils/compesation.dart';
 
-String tiempoTrabajado(String inicio, String fin) {
-  DateTime fechaInicio = DateTime.parse(inicio);
-  DateTime fechaFin = DateTime.parse(fin);
-
-  int diferencia =
-      (fechaFin.difference(fechaInicio).inDays / 365 * 360).toInt() + 1;
-  int years = (diferencia ~/ 360).toInt();
-  int residuoMeses = diferencia % 360;
-  int months = (residuoMeses ~/ 30).toInt();
-  int days = (residuoMeses) % 30;
-  return '${years <= 0 ? '' : years == 1 ? '$years Año, ' : '$years Años,'} ${months <= 0 ? '' : months == 1 ? '$months Mes, ' : '$months Meses,'} ${days <= 0 ? '' : days == 1 ? '$days Día.' : '$days Días.'}';
-}
-
 class FinalCalculationDismissal extends StatefulWidget {
-  String nombre, monto, empresa, tipo, fechaInicio, fechaFin;
+  String nombre, monto, empresa, tipo;
+  DateTime fechaInicio, fechaFin;
+  int diasPreaviso;
   FinalCalculationDismissal({
     Key? key,
     required this.nombre,
@@ -29,6 +20,7 @@ class FinalCalculationDismissal extends StatefulWidget {
     required this.tipo,
     required this.fechaInicio,
     required this.fechaFin,
+    this.diasPreaviso = 0,
   }) : super(key: key);
 
   @override
@@ -126,7 +118,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Motivo de Salida:',
+                      text: 'Motivo de Salida: ',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -138,7 +130,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Nombre Completo:',
+                      text: 'Nombre Completo: ',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -150,7 +142,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Nombre de la Empresa:',
+                      text: 'Nombre de la Empresa: ',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -162,12 +154,12 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Antiguedad:',
+                      text: 'Antiguedad: ',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
                           text:
-                              ' \r ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)}',
+                              ' \r ${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | ( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -175,26 +167,37 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Salario Promedio Mensual:',
+                      text: 'Preaviso: ',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
-                          text: CurrencyFormat.format(_Salary),
+                          text: widget.diasPreaviso.toString() + 'días',
+                          style: subtitleStyle2,
+                        )
+                      ])),
+              const SizedBox(height: 20),
+              RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
+                      text: 'Salario Promedio Mensual: ',
+                      style: subtitleStyle,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: formatToHNL(_Salary),
                           style: subtitleStyle2,
                         )
                       ])),
               const SizedBox(height: 20),
               LabelTextAmount(
-                  label: 'Salario Diario:',
-                  amount: CurrencyFormat.format(_SalaryByDay)),
+                  label: 'Salario Diario: ', amount: formatToHNL(_SalaryByDay)),
               const SizedBox(height: 20),
               LabelTextAmount(
-                  label: 'Salario Ordinario:',
-                  amount: CurrencyFormat.format(_OrdinarySalary)),
+                  label: 'Salario Ordinario: ',
+                  amount: formatToHNL(_OrdinarySalary)),
               const SizedBox(height: 20),
               LabelTextAmount(
-                  label: 'Salario Ordinario Diario:',
-                  amount: CurrencyFormat.format(_OrdinarySalaryByDay)),
+                  label: 'Salario Ordinario Diario: ',
+                  amount: formatToHNL(_OrdinarySalaryByDay)),
               const SizedBox(height: 30),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -232,9 +235,10 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               const Text('\r\rXIII'),
                             ],
                           )),
-                          DataCell(Text(CurrencyFormat.format(_treceavoDias))),
-                          DataCell(Text(CurrencyFormat.format(_SalaryByDay))),
-                          DataCell(Text(CurrencyFormat.format(_treceavo))),
+                          DataCell(Text(
+                              CurrencyFormat4Digits.format(_treceavoDias))),
+                          DataCell(Text(formatToHNL(_SalaryByDay))),
+                          DataCell(Text(formatToHNL(_treceavo))),
                         ],
                       ),
                       DataRow(
@@ -255,10 +259,10 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          DataCell(
-                              Text(CurrencyFormat.format(_catorceavoDias))),
-                          DataCell(Text(CurrencyFormat.format(_SalaryByDay))),
-                          DataCell(Text(CurrencyFormat.format(_catorceavo))),
+                          DataCell(Text(
+                              CurrencyFormat4Digits.format(_catorceavoDias))),
+                          DataCell(Text(formatToHNL(_SalaryByDay))),
+                          DataCell(Text(formatToHNL(_catorceavo))),
                         ],
                       ),
                       DataRow(
@@ -279,11 +283,10 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          DataCell(
-                              Text(CurrencyFormat.format(_vacacionesDias))),
                           DataCell(Text(
-                              CurrencyFormat.format(_OrdinarySalaryByDay))),
-                          DataCell(Text(CurrencyFormat.format(_vacaciones))),
+                              CurrencyFormat4Digits.format(_vacacionesDias))),
+                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
+                          DataCell(Text(formatToHNL(_vacaciones))),
                         ],
                       ),
                       DataRow(
@@ -292,7 +295,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                           const DataCell(Text('')),
                           const DataCell(Text('Total',
                               style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataCell(Text(CurrencyFormat.format(_totalDerechos),
+                          DataCell(Text(formatToHNL(_totalDerechos),
                               style: TextStyle(fontWeight: FontWeight.bold))),
                         ],
                       ),
@@ -314,10 +317,9 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          DataCell(Text(CurrencyFormat.format(_preavisoDias))),
-                          DataCell(Text(
-                              CurrencyFormat.format(_OrdinarySalaryByDay))),
-                          DataCell(Text(CurrencyFormat.format(_preaviso))),
+                          DataCell(Text(_preavisoDias.toString())),
+                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
+                          DataCell(Text(formatToHNL(_preaviso))),
                         ],
                       ),
                       DataRow(
@@ -338,10 +340,9 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          DataCell(Text(CurrencyFormat.format(_cesantiaDias))),
-                          DataCell(Text(
-                              CurrencyFormat.format(_OrdinarySalaryByDay))),
-                          DataCell(Text(CurrencyFormat.format(_cesantia))),
+                          DataCell(Text(_cesantiaDias.toString())),
+                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
+                          DataCell(Text(formatToHNL(_cesantia))),
                         ],
                       ),
                       DataRow(
@@ -362,12 +363,10 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          DataCell(Text(CurrencyFormat.format(
+                          DataCell(Text(CurrencyFormat4Digits.format(
                               _cesantiaProporcionalDias))),
-                          DataCell(Text(
-                              CurrencyFormat.format(_OrdinarySalaryByDay))),
-                          DataCell(Text(
-                              CurrencyFormat.format(_cesantiaProporcional))),
+                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
+                          DataCell(Text(formatToHNL(_cesantiaProporcional))),
                         ],
                       ),
                       DataRow(
@@ -375,8 +374,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                           DataCell(Text('')),
                           DataCell(Text('')),
                           DataCell(Text('')),
-                          DataCell(
-                              Text(CurrencyFormat.format(_totalObligaciones))),
+                          DataCell(Text(formatToHNL(_totalObligaciones))),
                         ],
                       ),
                       DataRow(
@@ -389,8 +387,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                           )),
                           DataCell(
                             Text(
-                                CurrencyFormat.format(
-                                    _totalObligaciones + 100000),
+                                formatToHNL(
+                                    _totalObligaciones + _totalDerechos),
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           )
                         ],
@@ -472,78 +470,104 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
   }
 
   void calculateCompesation() {
-    DateTime fechaInicio = DateTime.parse(widget.fechaInicio);
-    DateTime fechaFin = DateTime.parse(widget.fechaFin);
-    int diasTrabajados = fechaFin.difference(fechaInicio).inDays;
-    //si ha trabajado más de un año, se calcula desde el 01/01/ del año en curso
-    //caso contrario, se toma desde que comenzó a trabajar.
-    DateTime fechaInicioTreceavo =
-        diasTrabajados >= 360 ? DateTime(fechaFin.year) : fechaInicio;
+    DateTime fechaInicio = widget.fechaInicio;
+    DateTime fechaFin = widget.fechaFin;
+    Days360 diasTrabajados360 = difference360(fechaInicio, fechaFin);
+    int diasTrabajados = diasTrabajados360.totalDays();
+
+    //si el año de inicio es el mismo con el que sale, se toma la fecha de inicio,
+    //caso contrario, se toma la el primero de enero del la fecha de fin
+    DateTime fechaInicioTreceavo = (fechaInicio.year == fechaFin.year)
+        ? fechaInicio
+        : DateTime(fechaFin.year);
     // la diferencia en dias de la fecha fin a la fecha del inicio del treceavo
     int diferenciaTreceavoDias =
-        fechaFin.difference(fechaInicioTreceavo).inDays;
+        difference360(fechaInicioTreceavo, fechaFin).totalDays();
     _treceavoDias = (diferenciaTreceavoDias / 360) * 30;
     _treceavo = _treceavoDias * _SalaryByDay;
     //si ha trabajado más de un año, se calcula desde el 01/07 del año pasado
     //caso contrario, se toma desde que comenzó a trabajar.
-    DateTime fechaInicioCatorceavo =
-        diasTrabajados >= 360 ? DateTime(fechaFin.year - 1, 7, 1) : fechaInicio;
+    DateTime fechaInicioCatorceavo = diasTrabajados >= 360
+        ? (fechaFin.month >= 7)
+            ? DateTime(fechaFin.year, 7, 1)
+            : DateTime(fechaFin.year - 1, 7, 1)
+        : fechaInicio;
     // la diferencia en dias de la fecha fin a la fecha del inicio del catorceavo
     int diferenciaCatorceavoDias =
-        fechaFin.difference(fechaInicioCatorceavo).inDays;
+        difference360(fechaInicioCatorceavo, fechaFin).totalDays();
     _catorceavoDias = (diferenciaCatorceavoDias / 360) * 30;
     _catorceavo = _catorceavoDias * _SalaryByDay;
     //si ha trabajado más de un año, se calcula un la fecha del último periodo de vacaciones
     //caso contrario, se toma desde que comenzó a trabajar.
 
-    int aniosTrabajados = (diasTrabajados ~/ 360).toInt();
+    int aniosTrabajados = (diasTrabajados ~/ 360).toInt() + 1;
     int diasOtorgadosVacaciones = 20;
     //si no encuentra el parametro del rango, poner el dia maximo
-    Parametros.vacaciones.map((element) => {
+    Parametros.vacaciones.forEach((element) => {
           if (aniosTrabajados == element.anioTrabajado)
             {diasOtorgadosVacaciones = element.dias}
         });
 
-    _vacacionesDias = ((diasTrabajados % 360) / diasOtorgadosVacaciones);
+    _vacacionesDias =
+        (diasTrabajados360.months * 30 + diasTrabajados360.days + 1) /
+            360 *
+            diasOtorgadosVacaciones;
     _vacaciones = _vacacionesDias * _OrdinarySalaryByDay;
     _totalDerechos = _catorceavo + _treceavo + _vacaciones;
     setState(() {});
   }
 
   void calculateObligation() {
-    DateTime fechaInicio = DateTime.parse(widget.fechaInicio);
-    DateTime fechaFin = DateTime.parse(widget.fechaFin);
-    int diasTrabajados = fechaFin.difference(fechaInicio).inDays;
+    DateTime fechaInicio = widget.fechaInicio;
+    DateTime fechaFin = widget.fechaFin;
+    Days360 diastrabajados360 = difference360(fechaInicio, fechaFin);
+    int diasTrabajados = diastrabajados360.totalDays();
+    int diasProporcionales =
+        (diastrabajados360.months * 30) + diastrabajados360.days + 1;
     int aniosTrabajados = (diasTrabajados ~/ 360).toInt();
 
-    _preavisoDias = (aniosTrabajados >= 2) ? 60.0 : 99.0;
+    _preavisoDias =
+        ((aniosTrabajados >= 2) ? 60.0 : 99.0) - widget.diasPreaviso;
 
-    Parametros.preaviso.map((e) => {
+    Parametros.preaviso.forEach((e) => {
           if (!e.mustContinue)
             {
-              if (_preavisoDias >= e.desde && _preavisoDias <= e.hasta)
-                {_preavisoDias = e.dias.toDouble()}
+              if (diasTrabajados >= e.desde && diasTrabajados <= e.hasta)
+                {_preavisoDias = e.dias.toDouble() - widget.diasPreaviso}
             }
         });
     _preaviso = _preavisoDias * _OrdinarySalaryByDay;
 
-    _cesantiaDias = (aniosTrabajados < 25) ? aniosTrabajados.toDouble() : 25.00;
+    _cesantiaDias = diasTrabajados.toDouble();
 
-    Parametros.cesantia.map((e) => {
+    Parametros.cesantia.forEach((e) => {
           if (!e.mustContinue)
             {
-              if (_cesantiaDias >= e.desde && _cesantiaDias <= e.hasta)
-                if (_cesantiaDias > 30)
-                  {
-                    {_cesantiaDias = e.dias.toDouble()}
-                  }
+              if (diasTrabajados >= e.desde && diasTrabajados <= e.hasta)
+                if (_cesantiaDias > 30) {_cesantiaDias = e.dias.toDouble()}
+            }
+          else
+            {
+              if (diasTrabajados >= 9000)
+                {_cesantiaDias = 25 * 30}
+              else
+                {_cesantiaDias = diastrabajados360.years * 30}
             }
         });
-    _cesantia = _OrdinarySalaryByDay * 30 * _cesantiaDias;
+    _cesantia = _OrdinarySalaryByDay * _cesantiaDias;
 
-    _cesantiaProporcionalDias = ((diasTrabajados % 360) / 30);
+    _cesantiaProporcionalDias = ((diasProporcionales / 360) * 30);
     _cesantiaProporcional = _cesantiaProporcionalDias * _OrdinarySalaryByDay;
     _totalObligaciones = _cesantia + _cesantiaProporcional + _preaviso;
+
     setState(() {});
+  }
+
+  String tiempoTrabajado(DateTime fechaInicio, DateTime fechaFin) {
+    Days360 diferencia = difference360(fechaInicio, fechaFin);
+    int years = diferencia.years;
+    int months = diferencia.months;
+    int days = diferencia.days;
+    return '${years <= 0 ? '' : years == 1 ? '$years Año, ' : '$years Años,'} ${months <= 0 ? '' : months == 1 ? '$months Mes, ' : '$months Meses,'} ${days <= 0 ? '' : days == 1 ? '$days Día.' : '$days Días.'}';
   }
 }

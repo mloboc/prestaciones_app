@@ -52,4 +52,45 @@ class Parametros {
   ];
 }
 
+class Days360 {
+  int days;
+  int months;
+  int years;
+  int totalDays() => (years * 360) + (months * 30) + days + 1;
+  Days360({required this.years, required this.months, required this.days});
+}
+
 final CurrencyFormat = NumberFormat("#,##0.00", "en_US");
+
+final CurrencyFormat4Digits = NumberFormat("#,##0.0000");
+String formatToHNL(double number) =>
+    "L. " + CurrencyFormat.format(number).toString();
+
+Days360 difference360(DateTime fechaInicio, DateTime fechaFin) {
+  bool restMonth = false;
+  bool restYear = false;
+  int day, year, month;
+
+  if (fechaFin.day < fechaInicio.day) {
+    restMonth = true;
+    day = fechaFin.day + 30 - fechaInicio.day;
+  } else {
+    day = fechaFin.day - fechaInicio.day;
+  }
+
+  if (fechaFin.month < fechaInicio.month) {
+    restYear = true;
+    month = fechaFin.month + 12 - fechaInicio.month;
+  } else {
+    month = fechaFin.month - fechaInicio.month;
+  }
+  if (restMonth) month = month - 1;
+
+  if (restYear) {
+    year = fechaFin.year - fechaInicio.year - 1;
+  } else {
+    year = fechaFin.year - fechaInicio.year;
+  }
+//  return (year * 360) + (month * 30) + day + 1;
+  return Days360(years: year, months: month, days: day);
+}

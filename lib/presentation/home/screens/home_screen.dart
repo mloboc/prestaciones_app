@@ -25,12 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _nombre = TextEditingController();
   final TextEditingController _monto = TextEditingController();
   final TextEditingController _empresa = TextEditingController();
+  final TextEditingController _preaviso = TextEditingController();
 
   String? selectedValue = null;
   final _dropdownFormKey = GlobalKey<FormState>();
-
-  String _date1 = "2020-08-16";
-  String _date2 = '2022-06-10';
+  bool _showPreaviso = false;
+  DateTime _fechaInicio = DateTime.now();
+  DateTime _fechaFin = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,11 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildDateTimePicker1(),
               const SizedBox(height: 30),
               _buildDateTimePicker2(),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
+              _buidlPreavisoDaysText(),
+              const SizedBox(height: 30),
+              _buildPreavisoDays(),
+              const SizedBox(height: 30),
               _buildCalculateButton(),
               const SizedBox(height: 30),
             ],
@@ -155,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: TextField(
         controller: _monto,
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           labelText: 'Salario Promedio Mensual',
           hintStyle: hintTextStyle,
@@ -217,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showTitleActions: true,
                     minTime: DateTime(1, 1, 1950),
                     maxTime: DateTime.now(), onConfirm: (date) {
-                  _date1 = DateFormat('EEEE, d/MMMM/y', 'es_ES').format(date);
+                  _fechaInicio = date;
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.es);
               },
@@ -232,7 +238,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  " $_date1",
+                                  DateFormat('EEEE, d/MMMM/y', 'es_ES')
+                                      .format(_fechaInicio),
                                   style: subtitleStyle,
                                 ),
                               ],
@@ -272,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
                     maxTime: DateTime.now(), onConfirm: (date) {
-                  _date2 = DateFormat('EEEE, d/MMMM/y', 'es_ES').format(date);
+                  _fechaFin = date;
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
@@ -287,7 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  " $_date2",
+                                  DateFormat('EEEE, d/MMMM/y', 'es_ES')
+                                      .format(_fechaFin),
                                   style: subtitleStyle,
                                 ),
                               ],
@@ -301,6 +309,47 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ])))
         ]);
+  }
+
+  Widget _buildPreavisoDays() {
+    return Visibility(
+      visible: _showPreaviso,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: TextField(
+          controller: _preaviso,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Días de Preaviso',
+            hintStyle: hintTextStyle,
+            floatingLabelAlignment: FloatingLabelAlignment.start,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: 'Preaviso',
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            contentPadding: const EdgeInsets.all(20),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buidlPreavisoDaysText() {
+    return (SwitchListTile(
+      title: const Text('Preaviso'),
+      subtitle: const Text(
+          'Coloque los días de anticipación que se le avisó de su despido o notificó su renuncia'),
+      value: _showPreaviso,
+      onChanged: (bool value) {
+        setState(() {
+          _showPreaviso = value;
+        });
+      },
+    ));
   }
 
   Widget _buildCalculateButton() {
@@ -323,8 +372,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         nombre: _nombre.text,
                         monto: _monto.text,
                         empresa: _empresa.text,
-                        fechaInicio: _date1,
-                        fechaFin: _date2,
+                        fechaInicio: _fechaInicio,
+                        fechaFin: _fechaFin,
+                        diasPreaviso: int.tryParse(_preaviso.text) ?? 0,
                       )));
             } else if (selectedValue == 'Renuncia') {
               Navigator.of(context).push(MaterialPageRoute(
@@ -333,8 +383,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         nombre: _nombre.text,
                         monto: _monto.text,
                         empresa: _empresa.text,
-                        fechaInicio: _date1,
-                        fechaFin: _date2,
+                        fechaInicio: _fechaInicio,
+                        fechaFin: _fechaFin,
+                        diasPreaviso: int.tryParse(_preaviso.text) ?? 0,
                       )));
             } else {}
           },
