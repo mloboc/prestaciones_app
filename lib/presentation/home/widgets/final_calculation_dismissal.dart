@@ -112,11 +112,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-<<<<<<< Updated upstream
-                      text: 'Antiguedad:',
-=======
                       text: 'Antigüedad: ',
->>>>>>> Stashed changes
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(

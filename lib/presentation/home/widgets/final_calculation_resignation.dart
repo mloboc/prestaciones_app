@@ -107,11 +107,7 @@ class _FinalCalculationResignationState
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-<<<<<<< Updated upstream
-                      text: 'Antiguedad:',
-=======
                       text: 'Antigüedad: ',
->>>>>>> Stashed changes
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -217,11 +213,6 @@ class _FinalCalculationResignationState
                               ],
                             ),
                           ),
-<<<<<<< Updated upstream
-                          const DataCell(Text('5,87')),
-                          const DataCell(Text('550,00')),
-                          const DataCell(Text('3.226,67')),
-=======
                           DataCell(
                               Text(CurrencyFormat.format(_vacacionesDias))),
                           DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
@@ -307,7 +298,6 @@ class _FinalCalculationResignationState
                               _cesantiaProporcionalDias))),
                           DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
                           DataCell(Text(formatToHNL(_cesantiaProporcional))),
->>>>>>> Stashed changes
                         ],
                       ),
                       const DataRow(
@@ -364,8 +354,6 @@ class _FinalCalculationResignationState
     );
   }
 
-<<<<<<< Updated upstream
-=======
   Widget _buildGeneratePDFButton() {
     double _totalAPagar = _totalDerechos + _totalObligaciones;
     return SizedBox(
@@ -447,7 +435,6 @@ class _FinalCalculationResignationState
     );
   }
 
->>>>>>> Stashed changes
   Widget _buildReCalculateButton() {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.07,

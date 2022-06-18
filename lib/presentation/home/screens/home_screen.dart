@@ -155,13 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: TextField(
         controller: _monto,
-<<<<<<< Updated upstream
-=======
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
         ],
         keyboardType: TextInputType.number,
->>>>>>> Stashed changes
         decoration: InputDecoration(
           labelText: 'Salario',
           hintStyle: hintTextStyle,
