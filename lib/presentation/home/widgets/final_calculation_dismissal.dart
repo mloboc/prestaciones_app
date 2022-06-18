@@ -112,7 +112,11 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
+<<<<<<< Updated upstream
                       text: 'Antiguedad:',
+=======
+                      text: 'Antigüedad: ',
+>>>>>>> Stashed changes
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -146,7 +150,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                         label: Text('Elemento', style: subtitleStyle2),
                       ),
                       DataColumn(
-                        label: Text('Dias', style: subtitleStyle2),
+                        label: Text('Días', style: subtitleStyle2),
                       ),
                       DataColumn(
                         label: Text('Salario', style: subtitleStyle2),
@@ -272,7 +276,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                                   height: 25,
                                   width: 25,
                                 ),
-                                const Text('\r\rCesantia'),
+                                const Text('\r\rCesantía'),
                               ],
                             ),
                           ),
@@ -295,7 +299,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                                   height: 25,
                                   width: 25,
                                 ),
-                                const Text('\r\rCesantia PRO'),
+                                const Text('\r\rCesantía PRO'),
                               ],
                             ),
                           ),
@@ -369,6 +373,90 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
     );
   }
 
+<<<<<<< Updated upstream
+=======
+  Widget _buildGeneratePDFButton() {
+    double _totalAPagar = _totalDerechos + _totalObligaciones;
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.07,
+      width: MediaQuery.of(context).size.width,
+      child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(kPrimaryLightColor),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  side: BorderSide(color: kPrimaryColor),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              )),
+          onPressed: () async {
+            // _createPDF();
+            final invoice = Invoice(
+              info: InvoiceInfo(
+                motivoDeSalida: widget.tipo,
+                nombreCompleto: widget.nombre,
+                nombreEmpresa: widget.empresa,
+                antiguedad:
+                    '\n${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | \n( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
+                preaviso: widget.diasPreaviso,
+                salarioPromedioMensual: _Salary,
+                salarioDiario: _SalaryByDay,
+                salarioOrdinario: _OrdinarySalary,
+                salarioOrdinarioDiario: _OrdinarySalaryByDay,
+              ),
+              items: [
+                InvoiceItem(
+                  elemento: 'XIII',
+                  dias: _treceavoDias,
+                  salarioDiario: _SalaryByDay,
+                  pago: _treceavo,
+                ),
+                InvoiceItem(
+                  elemento: 'XVI',
+                  dias: _catorceavoDias,
+                  salarioDiario: _SalaryByDay,
+                  pago: _catorceavo,
+                ),
+                InvoiceItem(
+                  elemento: 'VAC',
+                  dias: _vacacionesDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _vacaciones,
+                ),
+                InvoiceItem(
+                  elemento: 'Preaviso',
+                  dias: _preavisoDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _preaviso,
+                ),
+                InvoiceItem(
+                  elemento: 'Cesantía',
+                  dias: _cesantiaDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _cesantia,
+                ),
+                InvoiceItem(
+                  elemento: 'Cesantía Pro',
+                  dias: _cesantiaProporcionalDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _cesantiaProporcional,
+                ),
+              ],
+              payItems: InvoicePayInfo(totalPago: _totalAPagar),
+            );
+
+            final pdfFile = await PdfInvoiceApi.generate(invoice);
+
+            PdfApi.openFile(pdfFile);
+          },
+          child: Text(
+            'Generar PDF',
+            style: buttonTextStyle2,
+          )),
+    );
+  }
+
+>>>>>>> Stashed changes
   Widget _buildReCalculateButton() {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.07,

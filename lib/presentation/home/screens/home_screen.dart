@@ -3,6 +3,7 @@ import 'package:prestaciones_app/presentation/home/widgets/final_calculation_res
 import 'package:prestaciones_app/presentation/home/widgets/final_calculation_dismissal.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter/services.dart';
 
 List<DropdownMenuItem<String>> get dropdownItems {
   List<DropdownMenuItem<String>> menuItems = [
@@ -54,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: RichText(
                           textAlign: TextAlign.left,
                           text: TextSpan(
-                              text: 'Calculo',
+                              text: 'Ceucal',
                               style: headingStyle,
                               children: <TextSpan>[
                                 TextSpan(
@@ -154,6 +155,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: TextField(
         controller: _monto,
+<<<<<<< Updated upstream
+=======
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ],
+        keyboardType: TextInputType.number,
+>>>>>>> Stashed changes
         decoration: InputDecoration(
           labelText: 'Salario',
           hintStyle: hintTextStyle,
