@@ -3,6 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/number_symbols_data.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:prestaciones_app/model/invoice.dart';
+import 'package:prestaciones_app/pdf/pdf_api.dart';
+import 'package:prestaciones_app/pdf/pdf_invoice_api.dart';
 import 'package:prestaciones_app/utils/label_text%20table.dart';
 import 'package:prestaciones_app/utils/label_text.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
@@ -48,14 +51,6 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
   double _cesantiaProporcionalDias = 0;
   double _totalDerechos = 0;
   double _totalObligaciones = 0;
-  final dataMap = <String, double>{
-    "XIII": 916.67,
-    "XIV": 9166.67,
-    "VAC": 3226.67,
-    "PreAviso": 16500,
-    "Cesantia": 16500,
-    "CesantiaPRO": 8066
-  };
 
   @override
   void initState() {
@@ -65,15 +60,6 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
     calculateCompesation();
     calculateObligation();
   }
-
-  final colorList = <Color>[
-    Colors.yellow.shade200,
-    Colors.orange.shade400,
-    Colors.pink.shade100,
-    Colors.green.shade300,
-    Colors.purple.shade300,
-    Colors.red.shade400
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +76,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
           ),
           const SizedBox(height: 30),
           _buildPendingPaymentChart(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
           _buildDataTable(),
           const SizedBox(height: 80),
         ]),
@@ -99,9 +85,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
   }
 
   Widget _buildDataTable() {
-    double value;
     return Container(
-      height: MediaQuery.of(context).size.height * 1.08,
+      height: MediaQuery.of(context).size.height * 1.28,
       decoration: BoxDecoration(
           color: kPrimaryLightColor,
           borderRadius: const BorderRadius.only(
@@ -171,7 +156,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
-                          text: widget.diasPreaviso.toString() + 'días',
+                          text: '${widget.diasPreaviso.toString()}\rdías',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -296,7 +281,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                           const DataCell(Text('Total',
                               style: TextStyle(fontWeight: FontWeight.bold))),
                           DataCell(Text(formatToHNL(_totalDerechos),
-                              style: TextStyle(fontWeight: FontWeight.bold))),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold))),
                         ],
                       ),
                       DataRow(
@@ -317,7 +303,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                               ],
                             ),
                           ),
-                          DataCell(Text(_preavisoDias.toString())),
+                          DataCell(Text(
+                              CurrencyFormat4Digits.format(_preavisoDias))),
                           DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
                           DataCell(Text(formatToHNL(_preaviso))),
                         ],
@@ -371,25 +358,29 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                       ),
                       DataRow(
                         cells: <DataCell>[
-                          DataCell(Text('')),
-                          DataCell(Text('')),
-                          DataCell(Text('')),
-                          DataCell(Text(formatToHNL(_totalObligaciones))),
+                          const DataCell(Text('')),
+                          const DataCell(Text('')),
+                          const DataCell(Text('Total',
+                              style: TextStyle(fontWeight: FontWeight.bold))),
+                          DataCell(Text(formatToHNL(_totalObligaciones),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold))),
                         ],
                       ),
                       DataRow(
                         cells: <DataCell>[
-                          DataCell(Text('')),
-                          DataCell(Text('')),
-                          DataCell(Text(
-                            'Total',
+                          const DataCell(Text('')),
+                          const DataCell(Text('')),
+                          const DataCell(Text(
+                            'Total a Pagar',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           )),
                           DataCell(
                             Text(
                                 formatToHNL(
                                     _totalObligaciones + _totalDerechos),
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
                           )
                         ],
                       ),
@@ -398,6 +389,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                 ),
               ),
               const SizedBox(height: 30),
+              _buildGeneratePDFButton(),
+              const SizedBox(height: 30),
               _buildReCalculateButton(),
             ]),
       ),
@@ -405,6 +398,23 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
   }
 
   Widget _buildPendingPaymentChart() {
+    final dataMap = <String, double>{
+      "XIII": _treceavo,
+      "XIV": _catorceavo,
+      "VAC": _vacaciones,
+      "PreAviso": _preaviso,
+      "Cesantia": _cesantia,
+      "CesantiaPRO": _cesantiaProporcional
+    };
+
+    final colorList = <Color>[
+      Colors.yellow.shade200,
+      Colors.orange.shade400,
+      Colors.pink.shade100,
+      Colors.green.shade300,
+      Colors.purple.shade300,
+      Colors.red.shade400
+    ];
     return PieChart(
       dataMap: dataMap,
       animationDuration: const Duration(milliseconds: 800),
@@ -419,20 +429,103 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
       centerTextStyle: centerChartTextStyle,
       legendOptions: const LegendOptions(
         showLegendsInRow: false,
-        legendPosition: LegendPosition.right,
+        legendPosition: LegendPosition.bottom,
         showLegends: false,
         legendShape: BoxShape.circle,
         legendTextStyle: TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),
-      chartValuesOptions: const ChartValuesOptions(
-        showChartValueBackground: false,
+      chartValuesOptions: ChartValuesOptions(
+        showChartValueBackground: true,
+        chartValueBackgroundColor: kPrimaryColor,
         showChartValues: false,
+        chartValueStyle: edgeChartTextStyle,
         showChartValuesInPercentage: true,
         showChartValuesOutside: true,
         decimalPlaces: 2,
       ),
+    );
+  }
+
+  Widget _buildGeneratePDFButton() {
+    double _totalAPagar = _totalDerechos + _totalObligaciones;
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.07,
+      width: MediaQuery.of(context).size.width,
+      child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(kPrimaryLightColor),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  side: BorderSide(color: kPrimaryColor),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              )),
+          onPressed: () async {
+            // _createPDF();
+            final invoice = Invoice(
+              info: InvoiceInfo(
+                motivoDeSalida: widget.tipo,
+                nombreCompleto: widget.nombre,
+                nombreEmpresa: widget.empresa,
+                antiguedad:
+                    '\n${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | \n( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
+                preaviso: widget.diasPreaviso,
+                salarioPromedioMensual: _Salary,
+                salarioDiario: _SalaryByDay,
+                salarioOrdinario: _OrdinarySalary,
+                salarioOrdinarioDiario: _OrdinarySalaryByDay,
+              ),
+              items: [
+                InvoiceItem(
+                  elemento: 'XIII',
+                  dias: _treceavoDias,
+                  salarioDiario: _SalaryByDay,
+                  pago: _treceavo,
+                ),
+                InvoiceItem(
+                  elemento: 'XVI',
+                  dias: _catorceavoDias,
+                  salarioDiario: _SalaryByDay,
+                  pago: _catorceavo,
+                ),
+                InvoiceItem(
+                  elemento: 'VAC',
+                  dias: _vacacionesDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _vacaciones,
+                ),
+                InvoiceItem(
+                  elemento: 'Preaviso',
+                  dias: _preavisoDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _preaviso,
+                ),
+                InvoiceItem(
+                  elemento: 'Cesantia',
+                  dias: _cesantiaDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _cesantia,
+                ),
+                InvoiceItem(
+                  elemento: 'Cesantia Pro',
+                  dias: _cesantiaProporcionalDias,
+                  salarioDiario: _OrdinarySalaryByDay,
+                  pago: _cesantiaProporcional,
+                ),
+              ],
+              payItems: InvoicePayInfo(totalPago: _totalAPagar),
+            );
+
+            final pdfFile = await PdfInvoiceApi.generate(invoice);
+
+            PdfApi.openFile(pdfFile);
+          },
+          child: Text(
+            'Generar PDF',
+            style: buttonTextStyle2,
+          )),
     );
   }
 

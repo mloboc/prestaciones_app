@@ -123,9 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               items: dropdownItems),
-
-          // if (_dropdownFormKey.currentState!.validate()) {
-          //valid flow
         ]));
   }
 
@@ -202,8 +199,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildDateTimePicker1() {
     return Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Fecha de Ingreso',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ),
           ElevatedButton(
               style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0),
@@ -218,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 DatePicker.showDatePicker(context,
                     theme: const DatePickerTheme(
                       backgroundColor: Colors.white,
-                      containerHeight: 210.0,
+                      containerHeight: 200.0,
                     ),
                     showTitleActions: true,
                     minTime: DateTime(1, 1, 1950),
@@ -260,6 +267,16 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Fecha de Salida',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ),
           ElevatedButton(
               style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0),
@@ -274,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 DatePicker.showDatePicker(context,
                     theme: const DatePickerTheme(
                       backgroundColor: Colors.white,
-                      containerHeight: 210.0,
+                      containerHeight: 200.0,
                     ),
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
