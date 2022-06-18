@@ -137,7 +137,7 @@ class _FinalCalculationResignationState
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Antiguedad: ',
+                      text: 'Antigüedad: ',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -499,13 +499,13 @@ class _FinalCalculationResignationState
                   pago: _preaviso,
                 ),
                 InvoiceItem(
-                  elemento: 'Cesantia',
+                  elemento: 'Cesantía',
                   dias: _cesantiaDias,
                   salarioDiario: _OrdinarySalaryByDay,
                   pago: _cesantia,
                 ),
                 InvoiceItem(
-                  elemento: 'Cesantia Pro',
+                  elemento: 'Cesantía Pro',
                   dias: _cesantiaProporcionalDias,
                   salarioDiario: _OrdinarySalaryByDay,
                   pago: _cesantiaProporcional,
