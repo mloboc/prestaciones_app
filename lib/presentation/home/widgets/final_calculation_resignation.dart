@@ -107,7 +107,7 @@ class _FinalCalculationResignationState
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Antigüedad: ',
+                      text: 'Antigüedad:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -213,91 +213,9 @@ class _FinalCalculationResignationState
                               ],
                             ),
                           ),
-                          DataCell(
-                              Text(CurrencyFormat.format(_vacacionesDias))),
-                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
-                          DataCell(Text(formatToHNL(_vacaciones))),
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          const DataCell(Text('')),
-                          const DataCell(Text('')),
-                          const DataCell(Text('Total',
-                              style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataCell(Text(formatToHNL(_totalDerechos),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold))),
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          DataCell(
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.green.shade300),
-                                  height: 25,
-                                  width: 25,
-                                ),
-                                const Text('\r\rPreaviso'),
-                              ],
-                            ),
-                          ),
-                          DataCell(Text(_preavisoDias.toString())),
-                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
-                          DataCell(Text(formatToHNL(_preaviso))),
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          DataCell(
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.purple.shade300),
-                                  height: 25,
-                                  width: 25,
-                                ),
-                                const Text('\r\rCesantía'),
-                              ],
-                            ),
-                          ),
-                          DataCell(Text(_cesantiaDias.toString())),
-                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
-                          DataCell(Text(formatToHNL(_cesantia))),
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          DataCell(
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.red.shade400),
-                                  height: 25,
-                                  width: 25,
-                                ),
-                                const Text('\r\rCesantía PRO'),
-                              ],
-                            ),
-                          ),
-                          DataCell(Text(CurrencyFormat4Digits.format(
-                              _cesantiaProporcionalDias))),
-                          DataCell(Text(formatToHNL(_OrdinarySalaryByDay))),
-                          DataCell(Text(formatToHNL(_cesantiaProporcional))),
+                          const DataCell(Text('5,87')),
+                          const DataCell(Text('550,00')),
+                          const DataCell(Text('3.226,67')),
                         ],
                       ),
                       const DataRow(
@@ -351,87 +269,6 @@ class _FinalCalculationResignationState
         showChartValuesOutside: true,
         decimalPlaces: 2,
       ),
-    );
-  }
-
-  Widget _buildGeneratePDFButton() {
-    double _totalAPagar = _totalDerechos + _totalObligaciones;
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.07,
-      width: MediaQuery.of(context).size.width,
-      child: ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(kPrimaryLightColor),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  side: BorderSide(color: kPrimaryColor),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              )),
-          onPressed: () async {
-            // _createPDF();
-            final invoice = Invoice(
-              info: InvoiceInfo(
-                motivoDeSalida: widget.tipo,
-                nombreCompleto: widget.nombre,
-                nombreEmpresa: widget.empresa,
-                antiguedad:
-                    '${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | \n( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
-                preaviso: widget.diasPreaviso,
-                salarioPromedioMensual: _Salary,
-                salarioDiario: _SalaryByDay,
-                salarioOrdinario: _OrdinarySalary,
-                salarioOrdinarioDiario: _OrdinarySalaryByDay,
-              ),
-              items: [
-                InvoiceItem(
-                  elemento: 'XIII',
-                  dias: _treceavoDias,
-                  salarioDiario: _SalaryByDay,
-                  pago: _treceavo,
-                ),
-                InvoiceItem(
-                  elemento: 'XVI',
-                  dias: _catorceavoDias,
-                  salarioDiario: _SalaryByDay,
-                  pago: _catorceavo,
-                ),
-                InvoiceItem(
-                  elemento: 'VAC',
-                  dias: _vacacionesDias,
-                  salarioDiario: _OrdinarySalaryByDay,
-                  pago: _vacaciones,
-                ),
-                InvoiceItem(
-                  elemento: 'Preaviso',
-                  dias: _preavisoDias,
-                  salarioDiario: _OrdinarySalaryByDay,
-                  pago: _preaviso,
-                ),
-                InvoiceItem(
-                  elemento: 'Cesantía',
-                  dias: _cesantiaDias,
-                  salarioDiario: _OrdinarySalaryByDay,
-                  pago: _cesantia,
-                ),
-                InvoiceItem(
-                  elemento: 'Cesantía Pro',
-                  dias: _cesantiaProporcionalDias,
-                  salarioDiario: _OrdinarySalaryByDay,
-                  pago: _cesantiaProporcional,
-                ),
-              ],
-              payItems: InvoicePayInfo(totalPago: _totalAPagar),
-            );
-
-            final pdfFile = await PdfInvoiceApi.generate(invoice);
-
-            PdfApi.openFile(pdfFile);
-          },
-          child: Text(
-            'Generar PDF',
-            style: buttonTextStyle2,
-          )),
     );
   }
 
