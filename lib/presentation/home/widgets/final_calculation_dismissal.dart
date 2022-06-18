@@ -103,7 +103,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Motivo de Salida: ',
+                      text: 'Motivo de Salida:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -115,7 +115,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Nombre Completo: ',
+                      text: 'Nombre Completo:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -127,7 +127,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Nombre de la Empresa: ',
+                      text: 'Nombre de la Empresa:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -139,12 +139,12 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Antigüedad: ',
+                      text: 'Antiguedad:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
                           text:
-                              ' \r ${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | ( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
+                              '\r${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | ( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -152,11 +152,11 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Preaviso: ',
+                      text: 'Preaviso:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
-                          text: '${widget.diasPreaviso.toString()}\rdías',
+                          text: '\r${widget.diasPreaviso.toString()}\rdías',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -164,25 +164,26 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Salario Promedio Mensual: ',
+                      text: 'Salario Promedio Mensual:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
-                          text: formatToHNL(_Salary),
+                          text: '\r${formatToHNL(_Salary)}',
                           style: subtitleStyle2,
                         )
                       ])),
               const SizedBox(height: 20),
               LabelTextAmount(
-                  label: 'Salario Diario: ', amount: formatToHNL(_SalaryByDay)),
+                  label: 'Salario Diario:',
+                  amount: '\r${formatToHNL(_SalaryByDay)}'),
               const SizedBox(height: 20),
               LabelTextAmount(
-                  label: 'Salario Ordinario: ',
-                  amount: formatToHNL(_OrdinarySalary)),
+                  label: 'Salario Ordinario:',
+                  amount: '\r${formatToHNL(_OrdinarySalary)}'),
               const SizedBox(height: 20),
               LabelTextAmount(
-                  label: 'Salario Ordinario Diario: ',
-                  amount: formatToHNL(_OrdinarySalaryByDay)),
+                  label: 'Salario Ordinario Diario:',
+                  amount: '\r${formatToHNL(_OrdinarySalaryByDay)}'),
               const SizedBox(height: 30),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -194,7 +195,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                         label: Text('Elemento', style: subtitleStyle2),
                       ),
                       DataColumn(
-                        label: Text('Días', style: subtitleStyle2),
+                        label: Text('Dias', style: subtitleStyle2),
                       ),
                       DataColumn(
                         label: Text('Salario', style: subtitleStyle2),
@@ -439,7 +440,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
       chartValuesOptions: ChartValuesOptions(
         showChartValueBackground: true,
         chartValueBackgroundColor: kPrimaryColor,
-        showChartValues: false,
+        showChartValues: true,
         chartValueStyle: edgeChartTextStyle,
         showChartValuesInPercentage: true,
         showChartValuesOutside: true,
@@ -503,13 +504,13 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                   pago: _preaviso,
                 ),
                 InvoiceItem(
-                  elemento: 'Cesantía',
+                  elemento: 'Cesantia',
                   dias: _cesantiaDias,
                   salarioDiario: _OrdinarySalaryByDay,
                   pago: _cesantia,
                 ),
                 InvoiceItem(
-                  elemento: 'Cesantía Pro',
+                  elemento: 'Cesantia Pro',
                   dias: _cesantiaProporcionalDias,
                   salarioDiario: _OrdinarySalaryByDay,
                   pago: _cesantiaProporcional,

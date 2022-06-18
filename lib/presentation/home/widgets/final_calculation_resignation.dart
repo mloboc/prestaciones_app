@@ -142,7 +142,7 @@ class _FinalCalculationResignationState
                       children: <TextSpan>[
                         TextSpan(
                           text:
-                              ' \r ${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | ( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
+                              '\r${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | ( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -434,12 +434,14 @@ class _FinalCalculationResignationState
           fontWeight: FontWeight.bold,
         ),
       ),
-      chartValuesOptions: const ChartValuesOptions(
-        showChartValueBackground: false,
-        showChartValues: false,
+      chartValuesOptions: ChartValuesOptions(
+        showChartValueBackground: true,
+        chartValueBackgroundColor: kPrimaryColor,
+        showChartValues: true,
+        chartValueStyle: edgeChartTextStyle,
         showChartValuesInPercentage: true,
         showChartValuesOutside: true,
-        decimalPlaces: 4,
+        decimalPlaces: 2,
       ),
     );
   }

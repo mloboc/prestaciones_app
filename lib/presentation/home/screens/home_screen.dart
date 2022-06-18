@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: RichText(
                           textAlign: TextAlign.left,
                           text: TextSpan(
-                              text: 'Ceucal',
+                              text: 'Ceucalc',
                               style: headingStyle,
                               children: <TextSpan>[
                                 TextSpan(
