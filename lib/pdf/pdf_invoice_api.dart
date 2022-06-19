@@ -38,7 +38,7 @@ class PdfInvoiceApi {
       'Motivo de Salida:',
       'Nombre Completo:',
       'Nombre de la Empresa:',
-      'Antiguedad:',
+      'Antigüedad:',
       'Preaviso:',
       'Salario Promedio Mensual:',
       'Salario Diario:',
@@ -72,7 +72,7 @@ class PdfInvoiceApi {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Calculo Prestaciones',
+            'Cálculo Prestaciones',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 0.3 * PdfPageFormat.cm),
@@ -82,7 +82,7 @@ class PdfInvoiceApi {
   static Widget buildInvoice(Invoice invoice) {
     final headers = [
       'Elemento',
-      'Dias',
+      'Días',
       'Salario Diario',
       'Pago',
     ];
