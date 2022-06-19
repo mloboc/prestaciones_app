@@ -192,7 +192,7 @@ class _FinalCalculationResignationState
                         label: Text('Elemento', style: subtitleStyle2),
                       ),
                       DataColumn(
-                        label: Text('Dias', style: subtitleStyle2),
+                        label: Text('Días', style: subtitleStyle2),
                       ),
                       DataColumn(
                         label: Text('Salario', style: subtitleStyle2),
@@ -320,7 +320,7 @@ class _FinalCalculationResignationState
                                   height: 25,
                                   width: 25,
                                 ),
-                                const Text('\r\rCesantia'),
+                                const Text('\r\rCesantía'),
                               ],
                             ),
                           ),
@@ -343,7 +343,7 @@ class _FinalCalculationResignationState
                                   height: 25,
                                   width: 25,
                                 ),
-                                const Text('\r\rCesantia PRO'),
+                                const Text('\r\rCesantía PRO'),
                               ],
                             ),
                           ),
