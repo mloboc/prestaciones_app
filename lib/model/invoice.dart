@@ -14,6 +14,8 @@ class InvoiceInfo {
   final String motivoDeSalida;
   final String nombreCompleto;
   final String nombreEmpresa;
+  final String fechaInicio;
+  final String fechaSalida;
   final String antiguedad;
   final int preaviso;
   final double salarioPromedioMensual;
@@ -25,6 +27,8 @@ class InvoiceInfo {
     required this.motivoDeSalida,
     required this.nombreCompleto,
     required this.nombreEmpresa,
+    required this.fechaInicio,
+    required this.fechaSalida,
     required this.antiguedad,
     required this.preaviso,
     required this.salarioPromedioMensual,

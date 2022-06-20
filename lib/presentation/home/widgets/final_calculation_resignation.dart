@@ -467,8 +467,12 @@ class _FinalCalculationResignationState
                 motivoDeSalida: widget.tipo,
                 nombreCompleto: widget.nombre,
                 nombreEmpresa: widget.empresa,
+                fechaInicio: DateFormat('EEEE, d/MMMM/y', 'es_ES')
+                    .format(widget.fechaInicio),
+                fechaSalida: DateFormat('EEEE, d/MMMM/y', 'es_ES')
+                    .format(widget.fechaFin),
                 antiguedad:
-                    '${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | \n( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
+                    tiempoTrabajado(widget.fechaInicio, widget.fechaFin),
                 preaviso: widget.diasPreaviso,
                 salarioPromedioMensual: _Salary,
                 salarioDiario: _SalaryByDay,

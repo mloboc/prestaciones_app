@@ -22,7 +22,7 @@ class PdfInvoiceApi {
       ],
     ));
 
-    return PdfApi.saveDocument(name: 'calculo_prestaciones.pdf', pdf: pdf);
+    return PdfApi.saveDocument(name: 'cálculo_prestaciones.pdf', pdf: pdf);
   }
 
   static Widget buildHeader(Invoice invoice) => Column(
@@ -38,7 +38,9 @@ class PdfInvoiceApi {
       'Motivo de Salida:',
       'Nombre Completo:',
       'Nombre de la Empresa:',
-      'Antiguedad:',
+      'Fecha Inicio:',
+      'Fecha Salida:',
+      'Antigüedad:',
       'Preaviso:',
       'Salario Promedio Mensual:',
       'Salario Diario:',
@@ -49,6 +51,8 @@ class PdfInvoiceApi {
       info.motivoDeSalida,
       info.nombreCompleto,
       info.nombreEmpresa,
+      info.fechaInicio,
+      info.fechaSalida,
       info.antiguedad,
       '${info.preaviso.toString()} días',
       'L.${CurrencyFormat.format(info.salarioPromedioMensual)}',
@@ -63,7 +67,7 @@ class PdfInvoiceApi {
         final title = titles[index];
         final value = data[index];
 
-        return buildText(title: title, value: value, width: 200);
+        return buildText(title: title, value: value, width: 300);
       }),
     );
   }
@@ -72,7 +76,7 @@ class PdfInvoiceApi {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Calculo Prestaciones',
+            'Cálculo de Prestaciones',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 0.3 * PdfPageFormat.cm),
@@ -82,7 +86,7 @@ class PdfInvoiceApi {
   static Widget buildInvoice(Invoice invoice) {
     final headers = [
       'Elemento',
-      'Dias',
+      'Días',
       'Salario Diario',
       'Pago',
     ];
