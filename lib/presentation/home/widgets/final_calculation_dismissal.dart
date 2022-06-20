@@ -139,7 +139,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                      text: 'Antiguedad:',
+                      text: 'Antigüedad:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
@@ -195,7 +195,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                         label: Text('Elemento', style: subtitleStyle2),
                       ),
                       DataColumn(
-                        label: Text('Dias', style: subtitleStyle2),
+                        label: Text('Días', style: subtitleStyle2),
                       ),
                       DataColumn(
                         label: Text('Salario', style: subtitleStyle2),
@@ -324,7 +324,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                                   height: 25,
                                   width: 25,
                                 ),
-                                const Text('\r\rCesantia'),
+                                const Text('\r\rCesantía'),
                               ],
                             ),
                           ),
@@ -347,7 +347,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                                   height: 25,
                                   width: 25,
                                 ),
-                                const Text('\r\rCesantia PRO'),
+                                const Text('\r\rCesantía PRO'),
                               ],
                             ),
                           ),
@@ -404,8 +404,8 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
       "XIV": _catorceavo,
       "VAC": _vacaciones,
       "PreAviso": _preaviso,
-      "Cesantia": _cesantia,
-      "CesantiaPRO": _cesantiaProporcional
+      "Cesantía": _cesantia,
+      "CesantíaPRO": _cesantiaProporcional
     };
 
     final colorList = <Color>[
@@ -508,13 +508,13 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
                   pago: _preaviso,
                 ),
                 InvoiceItem(
-                  elemento: 'Cesantia',
+                  elemento: 'Cesantía',
                   dias: _cesantiaDias,
                   salarioDiario: _OrdinarySalaryByDay,
                   pago: _cesantia,
                 ),
                 InvoiceItem(
-                  elemento: 'Cesantia Pro',
+                  elemento: 'Cesantía Pro',
                   dias: _cesantiaProporcionalDias,
                   salarioDiario: _OrdinarySalaryByDay,
                   pago: _cesantiaProporcional,
