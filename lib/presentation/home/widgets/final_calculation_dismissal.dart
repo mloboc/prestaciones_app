@@ -139,12 +139,38 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
               RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
+                      text: 'Fecha Inicio:',
+                      style: subtitleStyle,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text:
+                              '\r${DateFormat('EEEE, d/MMMM/y', 'es_ES').format(widget.fechaInicio)}',
+                          style: subtitleStyle2,
+                        )
+                      ])),
+              const SizedBox(height: 20),
+              RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
+                      text: 'Fecha Salida:',
+                      style: subtitleStyle,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text:
+                              '\r${DateFormat('EEEE, d/MMMM/y', 'es_ES').format(widget.fechaFin)}',
+                          style: subtitleStyle2,
+                        )
+                      ])),
+              const SizedBox(height: 20),
+              RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
                       text: 'Antigüedad:',
                       style: subtitleStyle,
                       children: <TextSpan>[
                         TextSpan(
                           text:
-                              '\r${DateFormat("dd/MM/yy").format(widget.fechaInicio)} - ${DateFormat("dd/MM/yy").format(widget.fechaFin)} | ( ${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)})',
+                              '\r${tiempoTrabajado(widget.fechaInicio, widget.fechaFin)}',
                           style: subtitleStyle2,
                         )
                       ])),
@@ -426,7 +452,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
       chartType: ChartType.ring,
       ringStrokeWidth: 6,
       centerText:
-          'L. ${CurrencyFormat.format(_totalDerechos + _totalObligaciones)}',
+          'L${CurrencyFormat.format(_totalDerechos + _totalObligaciones)}',
       centerTextStyle: centerChartTextStyle,
       legendOptions: const LegendOptions(
         showLegendsInRow: false,

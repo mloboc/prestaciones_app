@@ -64,7 +64,7 @@ final CurrencyFormat = NumberFormat("#,##0.00", "en_US");
 
 final CurrencyFormat4Digits = NumberFormat("#,##0.0000");
 String formatToHNL(double number) =>
-    "L. " + CurrencyFormat.format(number).toString();
+    "L" + CurrencyFormat.format(number).toString();
 
 Days360 difference360(DateTime fechaInicio, DateTime fechaFin) {
   bool restMonth = false;

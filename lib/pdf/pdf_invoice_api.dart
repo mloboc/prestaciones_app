@@ -55,10 +55,10 @@ class PdfInvoiceApi {
       info.fechaSalida,
       info.antiguedad,
       '${info.preaviso.toString()} días',
-      'L.${CurrencyFormat.format(info.salarioPromedioMensual)}',
-      'L.${CurrencyFormat.format(info.salarioDiario)}',
-      'L.${CurrencyFormat.format(info.salarioOrdinario)}',
-      'L.${CurrencyFormat.format(info.salarioOrdinarioDiario)}',
+      'L${CurrencyFormat.format(info.salarioPromedioMensual)}',
+      'L${CurrencyFormat.format(info.salarioDiario)}',
+      'L${CurrencyFormat.format(info.salarioOrdinario)}',
+      'L${CurrencyFormat.format(info.salarioOrdinarioDiario)}',
     ];
 
     return Column(
@@ -94,8 +94,8 @@ class PdfInvoiceApi {
       return [
         item.elemento,
         item.dias.toStringAsFixed(2),
-        'L.${CurrencyFormat.format(item.salarioDiario)}',
-        'L.${CurrencyFormat.format(item.pago)}',
+        'L${CurrencyFormat.format(item.salarioDiario)}',
+        'L${CurrencyFormat.format(item.pago)}',
       ];
     }).toList();
 
@@ -121,7 +121,7 @@ class PdfInvoiceApi {
         children: [
           Text('Total a Pagar', style: TextStyle(fontWeight: FontWeight.bold)),
           Text(
-            'L.${CurrencyFormat.format(payInfo.totalPago)}',
+            'L${CurrencyFormat.format(payInfo.totalPago)}',
           ),
         ],
       );
