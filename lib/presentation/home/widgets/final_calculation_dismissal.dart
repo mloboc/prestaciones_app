@@ -86,7 +86,7 @@ class _FinalCalculationDismissalState extends State<FinalCalculationDismissal> {
 
   Widget _buildDataTable() {
     return Container(
-      height: MediaQuery.of(context).size.height * 1.28,
+      height: MediaQuery.of(context).size.height * 1.31,
       decoration: BoxDecoration(
           color: kPrimaryLightColor,
           borderRadius: const BorderRadius.only(
