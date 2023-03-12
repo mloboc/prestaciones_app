@@ -11,12 +11,18 @@ Map<String, WidgetBuilder> getAplicationRoutes() {
           monto: '',
           nombre: '',
           tipo: '',
+          fechaInicio: DateTime.now(),
+          fechaFin: DateTime.now(),
+          diasPreaviso: 1,
         ),
     "final_calculation_dismissal": (_) => FinalCalculationDismissal(
           empresa: '',
           monto: '',
           nombre: '',
           tipo: '',
+          fechaInicio: DateTime.now(),
+          fechaFin: DateTime.now(),
+          diasPreaviso: 1,
         ),
   };
 }

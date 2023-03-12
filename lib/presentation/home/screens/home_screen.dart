@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:prestaciones_app/presentation/home/widgets/final_calculation_resignation.dart';
 import 'package:prestaciones_app/presentation/home/widgets/final_calculation_dismissal.dart';
 import 'package:prestaciones_app/utils/style_constants.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter/services.dart';
 
 List<DropdownMenuItem<String>> get dropdownItems {
   List<DropdownMenuItem<String>> menuItems = [
@@ -24,12 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _nombre = TextEditingController();
   final TextEditingController _monto = TextEditingController();
   final TextEditingController _empresa = TextEditingController();
+  final TextEditingController _preaviso = TextEditingController();
 
   String? selectedValue = null;
   final _dropdownFormKey = GlobalKey<FormState>();
-
-  String _date1 = "Fecha Ingreso";
-  String _date2 = 'Fecha Despido';
+  bool _showPreaviso = false;
+  DateTime _fechaInicio = DateTime.now();
+  DateTime _fechaFin = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: RichText(
                           textAlign: TextAlign.left,
                           text: TextSpan(
-                              text: 'Calculo',
+                              text: 'Cálculo de',
                               style: headingStyle,
                               children: <TextSpan>[
                                 TextSpan(
@@ -82,7 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildDateTimePicker1(),
               const SizedBox(height: 30),
               _buildDateTimePicker2(),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
+              _buidlPreavisoDaysText(),
+              const SizedBox(height: 30),
+              _buildPreavisoDays(),
+              const SizedBox(height: 30),
               _buildCalculateButton(),
               const SizedBox(height: 30),
             ],
@@ -96,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(children: [
           DropdownButtonFormField(
               decoration: InputDecoration(
-                labelText: 'Tipo',
+                labelText: 'Motivo de Salida',
                 floatingLabelAlignment: FloatingLabelAlignment.start,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 enabledBorder: OutlineInputBorder(
@@ -117,9 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               items: dropdownItems),
-
-          // if (_dropdownFormKey.currentState!.validate()) {
-          //valid flow
         ]));
   }
 
@@ -132,11 +136,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         controller: _nombre,
         decoration: InputDecoration(
-          labelText: 'Nombre',
+          labelText: 'Nombre Completo',
           hintStyle: hintTextStyle,
           floatingLabelAlignment: FloatingLabelAlignment.start,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: 'Nombre',
+          hintText: 'Nombre Completo',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
@@ -154,12 +158,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: TextField(
         controller: _monto,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ],
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          labelText: 'Salario',
+          labelText: 'Salario Promedio Mensual',
           hintStyle: hintTextStyle,
           floatingLabelAlignment: FloatingLabelAlignment.start,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: 'Monto',
+          hintText: 'L.',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
@@ -178,11 +186,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         controller: _empresa,
         decoration: InputDecoration(
-          labelText: 'Empresa',
+          labelText: 'Nombre de la Empresa',
           hintStyle: hintTextStyle,
           floatingLabelAlignment: FloatingLabelAlignment.start,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: 'Empresa',
+          hintText: 'Nombre de la Empresa',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
@@ -195,8 +203,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildDateTimePicker1() {
     return Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Fecha de Ingreso',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ),
           ElevatedButton(
               style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0),
@@ -211,14 +229,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 DatePicker.showDatePicker(context,
                     theme: const DatePickerTheme(
                       backgroundColor: Colors.white,
-                      containerHeight: 210.0,
+                      containerHeight: 200.0,
                     ),
                     showTitleActions: true,
-                    minTime: DateTime(2000, 1, 1),
-                    maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date1 = '${date.year} - ${date.month} - ${date.day}';
+                    minTime: DateTime(1, 1, 1950),
+                    maxTime: DateTime.now(), onConfirm: (date) {
+                  _fechaInicio = date;
                   setState(() {});
-                }, currentTime: DateTime.now(), locale: LocaleType.en);
+                }, currentTime: DateTime.now(), locale: LocaleType.es);
               },
               child: Container(
                   alignment: Alignment.center,
@@ -231,8 +249,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  " $_date1",
-                                  style: hintTextStyle,
+                                  DateFormat('EEEE, d/MMMM/y', 'es_ES')
+                                      .format(_fechaInicio),
+                                  style: subtitleStyle,
                                 ),
                               ],
                             )
@@ -252,6 +271,16 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Fecha de Salida',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ),
           ElevatedButton(
               style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0),
@@ -266,12 +295,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 DatePicker.showDatePicker(context,
                     theme: const DatePickerTheme(
                       backgroundColor: Colors.white,
-                      containerHeight: 210.0,
+                      containerHeight: 200.0,
                     ),
                     showTitleActions: true,
                     minTime: DateTime(2000, 1, 1),
-                    maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                  _date2 = '${date.year} - ${date.month} - ${date.day}';
+                    maxTime: DateTime.now(), onConfirm: (date) {
+                  _fechaFin = date;
                   setState(() {});
                 }, currentTime: DateTime.now(), locale: LocaleType.en);
               },
@@ -286,8 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  " $_date2",
-                                  style: hintTextStyle,
+                                  DateFormat('EEEE, d/MMMM/y', 'es_ES')
+                                      .format(_fechaFin),
+                                  style: subtitleStyle,
                                 ),
                               ],
                             )
@@ -300,6 +330,47 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ])))
         ]);
+  }
+
+  Widget _buildPreavisoDays() {
+    return Visibility(
+      visible: _showPreaviso,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: TextField(
+          controller: _preaviso,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Días de Preaviso',
+            hintStyle: hintTextStyle,
+            floatingLabelAlignment: FloatingLabelAlignment.start,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: 'Preaviso',
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            contentPadding: const EdgeInsets.all(20),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buidlPreavisoDaysText() {
+    return (SwitchListTile(
+      title: const Text('Preaviso'),
+      subtitle: const Text(
+          'Coloque los días de anticipación que se le avisó de su despido o notificó su renuncia.'),
+      value: _showPreaviso,
+      onChanged: (bool value) {
+        setState(() {
+          _showPreaviso = value;
+        });
+      },
+    ));
   }
 
   Widget _buildCalculateButton() {
@@ -322,14 +393,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         nombre: _nombre.text,
                         monto: _monto.text,
                         empresa: _empresa.text,
+                        fechaInicio: _fechaInicio,
+                        fechaFin: _fechaFin,
+                        diasPreaviso: int.tryParse(_preaviso.text) ?? 0,
                       )));
             } else if (selectedValue == 'Renuncia') {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => FinalCalculationResignation(
-                      tipo: selectedValue.toString(),
-                      nombre: _nombre.text,
-                      monto: _monto.text,
-                      empresa: _empresa.text)));
+                        tipo: selectedValue.toString(),
+                        nombre: _nombre.text,
+                        monto: _monto.text,
+                        empresa: _empresa.text,
+                        fechaInicio: _fechaInicio,
+                        fechaFin: _fechaFin,
+                        diasPreaviso: int.tryParse(_preaviso.text) ?? 0,
+                      )));
             } else {}
           },
           child: Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Color kPrimaryColor = const Color.fromRGBO(41, 68, 95, 1.0);
 Color kPrimaryLightColor = Colors.grey.shade100;
@@ -11,14 +12,21 @@ TextStyle headingStyle = TextStyle(
 );
 
 TextStyle headingStyle2 = TextStyle(
-  fontSize: 35,
+  fontSize: 30,
   fontWeight: FontWeight.bold,
   color: kPrimaryLightColor,
   height: 1.5,
 );
 
 TextStyle centerChartTextStyle = TextStyle(
-  fontSize: 35,
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+  color: kPrimaryLightColor,
+  height: 1.5,
+);
+
+TextStyle edgeChartTextStyle = TextStyle(
+  fontSize: 14,
   fontWeight: FontWeight.bold,
   color: kPrimaryLightColor,
   height: 1.5,
@@ -39,7 +47,7 @@ TextStyle titleFormStyle = const TextStyle(
 );
 
 TextStyle hintTextStyle = TextStyle(
-  fontSize: 18,
+  fontSize: 16,
   fontWeight: FontWeight.normal,
   color: Colors.grey.shade400,
 );
@@ -62,5 +70,12 @@ TextStyle buttonTextStyle = const TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.bold,
   color: Colors.white,
+  height: 1.0,
+);
+
+TextStyle buttonTextStyle2 = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+  color: kPrimaryColor,
   height: 1.0,
 );
